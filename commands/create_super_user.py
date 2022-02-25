@@ -20,7 +20,7 @@ async def create_user(first_name, last_name, email, phone, iban, password):
         "phone": phone,
         "iban": iban,
         "password": password,
-        "role": RoleType.admin
+        "role": RoleType.admin,
     }
     await database.connect()
     await UserManager.register(user_data)
