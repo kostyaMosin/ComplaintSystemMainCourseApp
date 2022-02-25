@@ -1,6 +1,7 @@
 alembic==1.7.6
 anyio==3.5.0
 asgiref==3.5.0
+asyncclick==8.0.3.2
 asyncpg==0.25.0
 click==8.0.4
 databases==0.5.5
