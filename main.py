@@ -4,10 +4,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from db import database
 from resources.routes import api_router
 
-origins = [
-    "http://localhost",
-    "http://localhost:8000"
-]
+origins = ["http://localhost", "http://localhost:8000"]
 
 
 app = FastAPI()
