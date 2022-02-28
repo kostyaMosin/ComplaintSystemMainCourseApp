@@ -8,7 +8,7 @@ class S3Service:
         self.key = config("AWS_ACCESS_KEY")
         self.secret = config("AWS_SECRET_KEY")
         self.endpoint_url = config("AWS_S3_ENDPOINT_URL")
-        self.region = config("AWS_REGION")
+        self.region = config("AWS_S3_REGION")
         self.s3 = boto3.client(
             "s3",
             aws_access_key_id=self.key,

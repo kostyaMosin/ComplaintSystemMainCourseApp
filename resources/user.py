@@ -1,6 +1,6 @@
 from typing import Optional, List
 
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, Response, status
 
 from managers.auth import oauth2_scheme, is_admin
 from managers.user import UserManager
@@ -24,16 +24,16 @@ async def get_users(email: Optional[str] = None):
 @router.put(
     "/users/{user_id}/make_admin",
     dependencies=[Depends(oauth2_scheme), Depends(is_admin)],
-    status_code=204,
 )
 async def make_admin(user_id: int):
     await UserManager.change_role(RoleType.admin, user_id)
+    return Response(status_code=status.HTTP_204_NO_CONTENT)
 
 
 @router.put(
     "/users/{user_id}/make_approver",
     dependencies=[Depends(oauth2_scheme), Depends(is_admin)],
-    status_code=204,
 )
 async def make_admin(user_id: int):
     await UserManager.change_role(RoleType.approver, user_id)
+    return Response(status_code=status.HTTP_204_NO_CONTENT)

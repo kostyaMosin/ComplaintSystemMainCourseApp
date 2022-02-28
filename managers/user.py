@@ -3,7 +3,7 @@ from passlib.context import CryptContext
 from asyncpg import UniqueViolationError
 from db import database
 from managers.auth import AuthManager
-from models import user, RoleType
+from models import user, RoleType, complaint
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
@@ -37,6 +37,11 @@ class UserManager:
     @staticmethod
     async def get_user_by_email(email):
         return await database.fetch_one(user.select().where(user.c.email == email))
+
+    @staticmethod
+    async def get_user_by_complain_id(id_):
+        complain = await database.fetch_one(complaint.select().where(complaint.c.id == id_))
+        return await database.fetch_one(user.select().where(user.c.id == complain["complainer_id"]))
 
     @staticmethod
     async def change_role(role: RoleType, user_id):

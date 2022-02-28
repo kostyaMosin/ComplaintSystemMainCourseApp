@@ -3,11 +3,14 @@ import uuid
 
 from constants import TEMP_FILE_FOLDER
 from db import database
+from managers.user import UserManager
 from models import complaint, RoleType, State
 from services.s3 import S3Service
+from services.ses import SESService
 from utils.helpers import decode_photo
 
 s3 = S3Service()
+ses = SESService()
 
 
 class ComplaintManager:
@@ -40,15 +43,23 @@ class ComplaintManager:
     @staticmethod
     async def approve(id_):
         await database.execute(
-            complaint.update()
-            .where(complaint.c.id == id_)
-            .values(status=State.approved)
+            complaint.update().where(complaint.c.id == id_).values(status=State.approved)
+        )
+        complainer = await UserManager.get_user_by_complain_id(id_)
+        ses.send_mail(
+            "Complaint approved!",
+            [complainer["email"]],
+            "Congrats! Your claim is approved, check your bank account in 2 days for your refund."
         )
 
     @staticmethod
     async def reject(id_):
         await database.execute(
-            complaint.update()
-            .where(complaint.c.id == id_)
-            .values(status=State.rejected)
+            complaint.update().where(complaint.c.id == id_).values(status=State.rejected)
+        )
+        complainer = await UserManager.get_user_by_complain_id(id_)
+        ses.send_mail(
+            "Complaint rejected!",
+            [complainer["email"]],
+            "Your claim is rejected, for some reasons."
         )
